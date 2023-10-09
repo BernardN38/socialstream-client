@@ -31,15 +31,21 @@ export default function LoginLogic() {
     try {
       const resp = await authApi.loginUser(userData);
       if (resp.status == 200) {
-        authContext.setUserId(resp.data.userId || 0);
+        const { userId } = resp.data;
+        authContext.setUserId(userId || 0);
         alertContext.setAlert({ message: "Login Successful!", open: true });
 
-        localStorage.setItem("userId", resp.data.userId);
-        navigate("/");
+        localStorage.setItem("userId", userId);
+        navigate(`/users/${userId}`);
       } else {
         console.log(resp.status);
       }
     } catch (error) {
+      alertContext.setAlert({
+        message: "Login failed!",
+        severity: "error",
+        open: true,
+      });
       console.log(error);
     }
   };
