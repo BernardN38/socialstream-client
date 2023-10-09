@@ -1,8 +1,11 @@
 import axios from "axios";
 import { serverUrl } from "../config";
-export default function UserApi(userId) {
-  const getUser = async () => {
-    const url = new URL(`/api/v1/users/${userId}`, serverUrl);
+export default function PostApi() {
+  const getPosts = async (userId, pageNo, pageSize) => {
+    const url = new URL(
+      `/api/v1/posts/users/${userId}?pageSize=5&pageNo=${pageNo}`,
+      serverUrl
+    );
     try {
       const resp = await axios.get(url.toString(), {
         withCredentials: true,
@@ -12,20 +15,19 @@ export default function UserApi(userId) {
       throw error;
     }
   };
-  const updateUser = async (userData) => {
-    const url = new URL(`/api/v1/users/${userId}`, serverUrl);
+  const createPost = async (form) => {
+    const url = new URL(`/api/v1/posts`, serverUrl);
     try {
-      const jsonData = JSON.stringify(userData);
-      const resp = await axios.patch(url.toString(), jsonData, {
+      const resp = await axios.post(url.toString(), form, {
         withCredentials: true,
       });
-      return resp.data;
+      return resp;
     } catch (error) {
       throw error;
     }
   };
-  const deltetUser = async () => {
-    const url = new URL(`/api/v1/users/${userId}`, serverUrl);
+  const deletePost = async (postId) => {
+    const url = new URL(`/api/v1/posts/${postId}`, serverUrl);
     try {
       const resp = await axios.delete(url.toString(), {
         withCredentials: true,
@@ -35,6 +37,5 @@ export default function UserApi(userId) {
       throw error;
     }
   };
-
-  return { getUser, updateUser };
+  return { getPosts, createPost, deletePost };
 }

@@ -7,14 +7,7 @@ import AlertContext from "../../routes/AlertContext";
 import AlertSnackbarLogic from "./AlterSnackbarLogic";
 
 function AlertSnackbar() {
-  const { alert, setAlert } = AlertSnackbarLogic();
-  console.log(alert);
-  const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setAlert({ message: "", open: false });
-  };
+  const { alert, setAlert, handleClose } = AlertSnackbarLogic();
 
   return (
     <Stack spacing={2} sx={{ width: "100%" }}>
@@ -24,7 +17,11 @@ function AlertSnackbar() {
         onClose={handleClose}
         TransitionComponent={Slide}
       >
-        <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
+        <Alert
+          onClose={handleClose}
+          severity={alert.severity || "success"}
+          sx={{ width: "100%" }}
+        >
           {alert.message}
         </Alert>
       </Snackbar>

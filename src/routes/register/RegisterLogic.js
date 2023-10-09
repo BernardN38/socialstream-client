@@ -4,8 +4,17 @@ export default function RegisterLogic() {
   const registerUser = async (userData) => {
     try {
       const resp = await authApi.registerUser(userData);
-      console.log(resp);
+      alertContext.setAlert({
+        message: "Registration successful!",
+        severity: "success",
+        open: true,
+      });
     } catch (error) {
+      alertContext.setAlert({
+        message: "Registration failed!",
+        severity: "error",
+        open: true,
+      });
       console.log(error.response.data);
     }
   };

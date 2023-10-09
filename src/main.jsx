@@ -6,12 +6,19 @@ import Root from "./routes/root";
 import Register from "./routes/register/Register";
 import Login from "./routes/login/Login";
 import Account from "./routes/account/Account";
+import AccountUpdate from "./routes/account/update/AccountUpdate";
+import Timeline from "./routes/timeline/Timeline";
+import PublicProfile from "./routes/publicProfile/PublicProfile";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Root />,
     children: [
+      {
+        path: "users/:userId",
+        element: <PublicProfile />,
+      },
       {
         path: "register/",
         element: <Register />,
@@ -22,7 +29,16 @@ const router = createBrowserRouter([
       },
       {
         path: "account/",
-        element: <Account />,
+        children: [
+          {
+            index: true,
+            element: <Account />,
+          },
+          {
+            path: "update",
+            element: <AccountUpdate />,
+          },
+        ],
       },
     ],
   },

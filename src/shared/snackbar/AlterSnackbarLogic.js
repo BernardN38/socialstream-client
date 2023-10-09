@@ -3,8 +3,12 @@ import AlertContext from "../../routes/AlertContext";
 
 export default function AlertSnackbarLogic() {
   const alertContext = useContext(AlertContext);
-  console.log(alertContext);
   const { alert, setAlert } = alertContext;
-  //   const [alert, setAlert] = useState({ message: "", open: false });
-  return { alert, setAlert };
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setAlert({ message: "", severity: alert.severity, open: false });
+  };
+  return { alert, setAlert, handleClose };
 }
