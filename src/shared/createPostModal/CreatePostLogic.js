@@ -1,8 +1,11 @@
 import { useState, useContext } from "react";
 import PostApi from "../../backendApi/posts/postApi";
 import AlertContext from "../../routes/AlertContext";
-export default function CreatePostLogic() {
+import Compressor from "compressorjs";
+import { useNavigate } from "react-router-dom";
+export default function CreatePostLogic(setPostCreatedCount) {
   const postApi = PostApi();
+  const navigate = useNavigate();
   const alertContext = useContext(AlertContext);
   const [selectedImage, setSelectedImage] = useState(null);
   const [formData, setFormData] = useState({
@@ -33,9 +36,10 @@ export default function CreatePostLogic() {
           form.append("media", result, result.name);
           form.append("body", formData.body);
           postApi
-            .createPost(formData)
+            .createPost(form)
             .then((resp) => {
               console.log(resp);
+              setPostCreatedCount((prev) => prev + 1);
               alertContext.setAlert({
                 message: "Post Created!",
                 open: true,
@@ -64,12 +68,14 @@ export default function CreatePostLogic() {
         .createPost(form)
         .then((resp) => {
           console.log(resp);
+          setPostCreatedCount((prev) => prev + 1);
           alertContext.setAlert({
             message: "Post Created!",
             open: true,
           });
         })
         .catch((e) => {
+          console.log(e);
           alertContext.setAlert({
             message: "Post Creation failed!",
             severity: "error",

@@ -9,16 +9,6 @@ export default function AccountUpdate() {
     authContext.userId
   );
 
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-  });
-
-  const [errors, setErrors] = useState({
-    firstName: "",
-    lastName: "",
-  });
-
   return (
     <Container maxWidth="sm" sx={{ mt: 2 }}>
       <form onSubmit={handleSubmit}>

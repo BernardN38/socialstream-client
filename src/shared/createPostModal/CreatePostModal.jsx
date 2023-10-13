@@ -13,9 +13,9 @@ import Compressor from "compressorjs";
 import axios from "axios";
 import { serverUrl } from "../../backendApi/config";
 import CreatePostLogic from "./CreatePostLogic";
-export default function CreatePostModal() {
+export default function CreatePostModal({ setPostCreatedCount }) {
   const { handleUpload, handleChange, handleImageChange, formData, errors } =
-    CreatePostLogic();
+    CreatePostLogic(setPostCreatedCount);
   return (
     <Box sx={{ padding: "1rem" }}>
       <Card sx={{ padding: "1rem" }}>

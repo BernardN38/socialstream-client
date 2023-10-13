@@ -12,12 +12,16 @@ import {
 import AuthContext from "../AuthContext";
 import { v4 as uuidv4 } from "uuid";
 import DeleteIcon from "@mui/icons-material/Delete";
+import AlertContext from "../AlertContext";
+import { useNavigate } from "react-router-dom";
 export default function TimelineLogic(userId) {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [pageNo, setPageNo] = useState(0);
   const postApi = PostApi();
+  const navigate = useNavigate();
   const authContext = useContext(AuthContext);
+  const alertContext = useContext(AlertContext);
   const { userId: loggedInUserId } = authContext;
   const refresh = () => {
     setPosts([]);
@@ -26,23 +30,41 @@ export default function TimelineLogic(userId) {
     getPosts(0);
   };
   const handleDeletePost = (postId) => {
-    setPosts((prevPosts) => {
-      let posts = prevPosts.filter((el) => {
-        if (el.key == postId) {
-          return false;
+    postApi
+      .deletePost(postId)
+      .then((resp) => {
+        setPosts((prevPosts) => {
+          let posts = prevPosts.filter((el) => {
+            if (el.key == postId) {
+              return false;
+            }
+            return true;
+          });
+          return posts;
+        });
+        alertContext.setAlert({
+          message: "Delete Successful!",
+          severity: "success",
+          open: true,
+        });
+      })
+      .catch((e) => {
+        alertContext.setAlert({
+          message: "Delete Failed!",
+          severity: "error",
+          open: true,
+        });
+        if (e.response.status === 401) {
+          navigate("/login");
         }
-        return true;
+        return;
       });
-      return posts;
-    });
-    postApi.deletePost(postId);
   };
-  const getPosts = (page = pageNo) => {
+  const getPosts = (page = pageNo, clean = false) => {
     postApi.getPosts(userId, page + 1, 6).then((resp) => {
       let postsArr = [];
       resp.posts.map((i, v) => {
         const [time, unit] = calculateTimeDisplay(i.createdAt);
-        console.log(typeof i.userId, typeof loggedInUserId);
         postsArr.push(
           <Card key={i.id} sx={{ margin: 1, padding: 1 }}>
             <Box
@@ -84,7 +106,11 @@ export default function TimelineLogic(userId) {
         );
       });
       setLoading(!resp.isLastPage);
-      setPosts((prevPosts) => [...prevPosts, ...postsArr]);
+      if (clean) {
+        setPosts((prevPosts) => [...postsArr]);
+      } else {
+        setPosts((prevPosts) => [...prevPosts, ...postsArr]);
+      }
       setPageNo((pageNo) => page + 1);
     });
   };

@@ -15,6 +15,9 @@ import AdbIcon from "@mui/icons-material/Adb";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../../routes/AuthContext";
 import NavbarLogic from "./NavbarLogic";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
+
 const pages = ["register", "login", "account"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
@@ -123,12 +126,21 @@ function Navbar(userData) {
           >
             LOGO
           </Typography>
-
+          <IconButton>
+            {false ? (
+              <NotificationsActiveIcon sx={{ color: "white" }} />
+            ) : (
+              <NotificationsIcon sx={{ color: "white" }} />
+            )}
+          </IconButton>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
               <Button
                 key={page}
-                onClick={handleCloseNavMenu}
+                onClick={() => {
+                  handleCloseNavMenu();
+                  navigate(page);
+                }}
                 sx={{ my: 2, color: "white", display: "block" }}
               >
                 {page}

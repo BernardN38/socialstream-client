@@ -13,14 +13,14 @@ export default function PublicProfile() {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
+  const [postCreatedCount, setPostCreatedCount] = useState(0);
   const authContext = useContext(AuthContext);
   const { userId: loggedInUserId } = authContext;
 
   return (
     <div>
       <ProfileHeader userId={userId} />
-      <Timeline userId={userId} />
+      <Timeline userId={userId} postCreatedCount={postCreatedCount} />
       <Box sx={{ display: "flex", justifyContent: "center" }}>
         {loggedInUserId === userId && (
           <Fab
@@ -45,7 +45,7 @@ export default function PublicProfile() {
               padding: "1rem",
             }}
           >
-            <CreatePostModal />
+            <CreatePostModal setPostCreatedCount={setPostCreatedCount} />
           </Box>
         </Modal>
       </Box>

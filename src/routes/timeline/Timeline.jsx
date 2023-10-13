@@ -3,25 +3,27 @@ import React, { useState, useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { serverUrl } from "../../backendApi/config";
 import TimelineLogic from "./TimelineLogic";
+import { Divider, Box } from "@mui/material";
 
-export default function Timeline({ userId }) {
+export default function Timeline({ userId, postCreatedCount }) {
   const { posts, loading, getPosts, refresh } = TimelineLogic(userId);
 
   useEffect(() => {
-    getPosts();
-  }, []);
+    getPosts(0, true);
+  }, [postCreatedCount]);
 
   return (
     <div>
       <InfiniteScroll
-        dataLength={posts.length} //This is important field to render the next data
+        dataLength={posts.length + postCreatedCount} //This is important field to render the next data
         next={getPosts}
         hasMore={loading}
         loader={<h4>Loading...</h4>}
         endMessage={
-          <p style={{ textAlign: "center" }}>
-            <b>Yay! You have seen it all</b>
-          </p>
+          <Box style={{ textAlign: "center" }}>
+            <b>End</b>
+            <Divider></Divider>
+          </Box>
         }
         // below props only if you need pull down functionality
         refreshFunction={refresh}
